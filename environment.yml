@@ -1,0 +1,15 @@
+# To create an environment with this configuration, use the following command:
+# conda env create -f environment.yml
+
+name: comp-vis
+channels:
+  - defaults
+dependencies:
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pip
+  - python
+  - tqdm
+  - pip:
+      - opencv-python
