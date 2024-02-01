@@ -227,3 +227,29 @@ def weighted_image(orig_img, hough_img, alpha, beta, gamma=0):
         The averaged weighted image sum of the two input images
     """
     return cv2.addWeighted(orig_img, alpha, hough_img, beta, gamma)
+
+
+def pipeline(img, roi_points):
+    """_summary_
+
+    Parameters
+    ----------
+    img : array_like
+        Original image to be transformed
+    roi_points : array_like
+        An array of a nested list containing tuples of the x and y 
+        vertices for the mask polygram  
+        Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
+
+    Returns
+    -------
+    array_like
+        Resulting image with highlighted lane lines
+    """
+
+    canny_img = canny(np.copy(img))
+    roi_canny_img = roi(canny_img, roi_points)
+    hough_img = hough_lines(roi_canny_img, 2, np.pi/180, 50, 10, 5, roi_points)
+    result = cv2.addWeighted(np.copy(img), 0.75, hough_img, 1.0, 0)
+    
+    return result
