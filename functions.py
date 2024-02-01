@@ -45,8 +45,7 @@ def roi(img, roi_points):
     img : array_like
         The ouput after Canny edge detection
     roi_points : array_like
-        An array of a nested list containing tuples of the x and y 
-        vertices for the mask polygram  
+        An array of the x and y vertices for the mask polygram  
         Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
 
     Returns
@@ -94,8 +93,7 @@ def get_coords(img, line, roi_points):
         An array containing the slope and intercept of a line
         Example: np.array([slope, intercept])
     roi_points : array_like
-        An array of a nested list containing tuples of the x and y 
-        vertices for the mask polygram  
+        An array of the x and y vertices for the mask polygram  
         Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
 
     Returns
@@ -127,8 +125,7 @@ def averaged_lines(img, lines, roi_points):
     lines : array_like
         The output of the the Hough line transform
     roi_points : array_like
-        An array of a nested list containing tuples of the x and y 
-        vertices for the mask polygram  
+        An array of the x and y vertices for the mask polygram  
         Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
 
     Returns
@@ -178,8 +175,7 @@ def hough_lines(img, rho, theta, thresh, min_len, max_gap, roi_points):
     max_gap : _type_
         Maximum gap between segments to link them
     roi_points : array_like
-        An array of a nested list containing tuples of the x and y 
-        vertices for the mask polygram  
+        An array of the x and y vertices for the mask polygram  
         Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
 
     Returns
@@ -237,8 +233,7 @@ def pipeline(img, roi_points):
     img : array_like
         Original image to be transformed
     roi_points : array_like
-        An array of a nested list containing tuples of the x and y 
-        vertices for the mask polygram  
+        An array of the x and y vertices for the mask polygram  
         Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
 
     Returns
@@ -251,5 +246,34 @@ def pipeline(img, roi_points):
     roi_canny_img = roi(canny_img, roi_points)
     hough_img = hough_lines(roi_canny_img, 2, np.pi/180, 50, 10, 5, roi_points)
     result = cv2.addWeighted(np.copy(img), 0.75, hough_img, 1.0, 0)
-    
+
+    return result
+
+
+def draw_roi(img, points, color):
+    """Draws the boundry of a region of interest on the image
+
+    Parameters
+    ----------
+    img : array_like
+        The image with the boundried to be drawn on
+    points : array_like
+        An array containing the the x and y coordinates of the
+        vertices for the boundry
+        Example: np.array([[(x1, y1), (x2, y2), (x3, y3)]])
+    color : tuple
+        A tuple containing the RGB values (respectively) for the boundry
+        color
+
+    Returns
+    -------
+    result : array_like
+        The original image with the drawn ROI boundries
+    """
+    for point in points:
+        for x, y in point:
+            cv2.circle(img, (x, y), radius = 10, color = color, thickness = -1)
+
+    result = cv2.polylines(img, points, True, color, thickness=5)
+
     return result
