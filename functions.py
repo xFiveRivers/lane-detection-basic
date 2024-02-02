@@ -61,7 +61,7 @@ def roi(img, roi_points):
     return masked_img
 
 
-def draw_lines(img, lines, color=[255, 0, 0], thickness=5):
+def draw_lines(img, lines, color=[0, 255, 0], thickness=5):
     """Draw Hough lines on supplied image
 
     Parameters
